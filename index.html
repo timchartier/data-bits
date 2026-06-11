@@ -1,0 +1,541 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Bits | Puppet Sketch Catalogue</title>
+  <style>
+    :root {
+      --bg: #f7fbff;
+      --ink: #1b2430;
+      --muted: #5b6778;
+      --card: #ffffff;
+      --line: #dce7f3;
+      --blue: #2f80ed;
+      --purple: #8e44ad;
+      --green: #219653;
+      --orange: #f2994a;
+      --pink: #eb5757;
+      --shadow: 0 18px 45px rgba(24, 44, 73, 0.12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(47,128,237,.18), transparent 32rem),
+        radial-gradient(circle at top right, rgba(242,153,74,.22), transparent 28rem),
+        linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 64px 24px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .78rem;
+      box-shadow: 0 8px 25px rgba(24,44,73,.07);
+    }
+
+    h1 {
+      margin: 18px auto 10px;
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      line-height: .92;
+      letter-spacing: -0.07em;
+      max-width: 1050px;
+    }
+
+    .subtitle {
+      margin: 0 auto;
+      max-width: 790px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.38rem);
+      line-height: 1.55;
+    }
+
+    .hero-icons {
+      margin: 28px auto 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-icons span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      height: 54px;
+      padding: 0 16px;
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 12px 30px rgba(24,44,73,.10);
+      border: 1px solid rgba(220,231,243,.9);
+      font-size: 1.5rem;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 64px;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 8px 0 28px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(220,231,243,.95);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    .search-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 14px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button.filter {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 750;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    button.filter:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(24,44,73,.10); }
+    button.filter.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .group {
+      margin: 36px 0 48px;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 16px;
+    }
+
+    .group-title h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.045em;
+    }
+
+    .group-title .count {
+      white-space: nowrap;
+      color: var(--muted);
+      font-weight: 800;
+      padding-bottom: 7px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(220,231,243,.95);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(24,44,73,.09);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+
+    .card:hover { transform: translateY(-3px); box-shadow: 0 18px 48px rgba(24,44,73,.14); }
+
+    video,
+    .thumbnail,
+    .youtube-embed {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #142033;
+      object-fit: cover;
+      border: 0;
+    }
+
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0 14px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--blue);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .watch-btn:hover {
+      opacity: .9;
+    }
+
+    .card-body { padding: 18px; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      font-weight: 850;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      margin-bottom: 12px;
+    }
+
+    .tag.grade { background: var(--blue); }
+    .tag.youcubed { background: var(--purple); }
+    .tag.character { background: var(--green); }
+    .tag.data { background: var(--orange); color: #2a1700; }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      letter-spacing: -0.025em;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .meta span {
+      background: #f2f7fd;
+      border: 1px solid var(--line);
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 42px 24px;
+      color: var(--muted);
+      background: rgba(255,255,255,.7);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 20px 24px 56px;
+    }
+
+    @media (max-width: 940px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      header { padding-top: 44px; }
+      .grid { grid-template-columns: 1fr; }
+      .group-title { align-items: start; flex-direction: column; gap: 6px; }
+      .toolbar { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">🎬 Puppet sketches • Animation • Data & math</div>
+    <h1>Data Bits</h1>
+    <p class="subtitle">A catalogue of short puppetry and animation sketches that invite youth into data, mathematics, curiosity, and playful problem solving.</p>
+    <div class="hero-icons" aria-hidden="true">
+      <span>🔢</span><span>📊</span><span>🎬</span><span>✏️</span><span>🤖</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar" aria-label="Catalogue controls">
+      <label class="search-wrap">
+        🔎
+        <input id="search" type="search" placeholder="Search by title, description, group, or keyword..." />
+      </label>
+      <div class="filters" aria-label="Filter by group">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="6th Grade Content">6th Grade Content</button>
+        <button class="filter" data-filter="YouCubed">YouCubed</button>
+        <button class="filter" data-filter="Character Driven">Character Driven</button>
+        <button class="filter" data-filter="Data Mindset">Data Mindset</button>
+      </div>
+    </section>
+
+    <div id="catalogue"></div>
+    <div id="empty" class="empty">No sketches match that search yet.</div>
+  </main>
+
+  <footer>
+    <strong>Data Bits</strong> — puppetry and animations on data and math for youth.
+  </footer>
+
+  <script>
+    // EDIT THIS LIST ONLY: Put this HTML file in the same folder as the MP4 files.
+    // Change file names, titles, descriptions, keywords, and durations as needed.
+    const sketches = [
+      {
+        title: "Gum Trouble - Ratio Tables",
+        group: "6th Grade Content",
+		youtubeUrl: "https://www.youtube.com/watch?v=gNr8HaXZwDI",
+        embedUrl: "https://www.youtube.com/embed/gNr8HaXZwDI",
+		thumbnail: "ratioTables.png",
+        description: "Bob the Counting SHeep and his friends ran out of gum. Using ratio tables and proportional reasoning, they use data from three packs to predict how much gum is in four packs.",
+		duration: "2:46",
+        keywords: ["ratio tables", "ratios", "scaling up", "unit rate"]
+      },
+	  {
+	    title: "Data Dunk - basketball analytics",
+	    group: "YouCubed",
+	    file: "Blitz_Cardinal_bball.mp4",
+	    description: "Blitz discovers that data can help him learn more about Stanford Cardinal women's basketball. By thinking like a coach or player and exploring real data, he uncovers insights shared by two Stanford athletes.",
+		thumbnail: "bballBlitz.png",
+	    duration: "2:34",
+	    keywords: [
+	          "data",
+	          "data literacy",
+	          "sports analytics",
+	          "basketball",
+	          "Stanford Cardinal",
+	          "curiosity",
+	          "patterns",
+	          "YouCubed",
+	          "mathematical mindset",
+	          "asking questions"
+	      ]
+	  },
+      {
+        title: "Graph It Like You Mean It",
+        group: "6th Grade Content",
+        file: "graph-it-like-you-mean-it.mp4",
+        description: "An animated sketch about choosing graphs that help a story become clearer.",
+        duration: "2:45",
+        keywords: ["graphs", "visualization", "bar charts"]
+      },
+      {
+        title: "Captain Correlation",
+        group: "Character Driven",
+        file: "captain-correlation.mp4",
+        description: "A recurring character investigates whether two things moving together really means one caused the other.",
+        duration: "4:00",
+        keywords: ["correlation", "causation", "critical thinking"]
+      },
+      {
+        title: "The Outlier Who Stood Out",
+        group: "Character Driven",
+        file: "outlier-who-stood-out.mp4",
+        description: "A character-driven story about why unusual data points deserve attention, not automatic deletion.",
+        duration: "3:30",
+        keywords: ["outliers", "variation", "storytelling"]
+      },
+      {
+        title: "Ask Better Data Questions",
+        group: "Data Mindset",
+        file: "ask-better-data-questions.mp4",
+        description: "A sketch that helps students move from collecting numbers to asking meaningful questions.",
+        duration: "2:55",
+        keywords: ["data mindset", "questioning", "inquiry"]
+      },
+      {
+        title: "Data Has a Story",
+        group: "Data Mindset",
+        file: "data-has-a-story.mp4",
+        description: "An animation about reading data with curiosity, context, and care.",
+        duration: "3:15",
+        keywords: ["context", "data stories", "interpretation"]
+      }
+    ];
+
+    const groups = ["6th Grade Content", "YouCubed", "Character Driven", "Data Mindset"];
+    const groupClass = {
+      "6th Grade Content": "grade",
+      "YouCubed": "youcubed",
+      "Character Driven": "character",
+      "Data Mindset": "data"
+    };
+
+    const catalogue = document.getElementById("catalogue");
+    const empty = document.getElementById("empty");
+    const search = document.getElementById("search");
+    const filterButtons = [...document.querySelectorAll(".filter")];
+    let activeFilter = "all";
+
+    function sketchMatches(sketch, query) {
+      const haystack = [
+        sketch.title,
+        sketch.group,
+        sketch.description,
+        sketch.duration,
+        ...(sketch.keywords || [])
+      ].join(" ").toLowerCase();
+      return haystack.includes(query.toLowerCase());
+    }
+
+    function getYouTubeId(url) {
+      if (!url) return "";
+      const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+      return match ? match[1] : "";
+    }
+
+    function getEmbedUrl(sketch) {
+      if (sketch.embedUrl) return sketch.embedUrl;
+      const videoId = getYouTubeId(sketch.youtubeUrl);
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+    }
+
+    function mediaMarkup(sketch) {
+      const embedUrl = getEmbedUrl(sketch);
+
+      if (embedUrl) {
+        return `
+          <iframe
+            class="youtube-embed"
+            src="${embedUrl}"
+            title="${sketch.title}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        `;
+      }
+
+      if (sketch.thumbnail) {
+        return `<img src="${sketch.thumbnail}" class="thumbnail" alt="${sketch.title}">`;
+      }
+
+      return `<div class="thumbnail" aria-label="No thumbnail available"></div>`;
+    }
+
+    function render() {
+      const query = search.value.trim();
+      catalogue.innerHTML = "";
+      let visibleTotal = 0;
+
+      groups.forEach(group => {
+        if (activeFilter !== "all" && activeFilter !== group) return;
+
+        const filtered = sketches.filter(sketch =>
+          sketch.group === group && (!query || sketchMatches(sketch, query))
+        );
+
+        if (!filtered.length) return;
+        visibleTotal += filtered.length;
+
+        const section = document.createElement("section");
+        section.className = "group";
+        section.innerHTML = `
+          <div class="group-title">
+            <h2>${group}</h2>
+            <div class="count">${filtered.length} sketch${filtered.length === 1 ? "" : "es"}</div>
+          </div>
+          <div class="grid"></div>
+        `;
+
+        const grid = section.querySelector(".grid");
+        filtered.forEach(sketch => {
+          const card = document.createElement("article");
+          card.className = "card";		  
+          const youtubeButton = sketch.youtubeUrl
+            ? `<a href="${sketch.youtubeUrl}" target="_blank" rel="noopener" class="watch-btn">▶ Watch on YouTube</a>`
+            : "";
+
+          card.innerHTML = `
+            ${mediaMarkup(sketch)}
+            <div class="card-body">
+              <div class="tag ${groupClass[sketch.group]}">${sketch.group}</div>
+              <h3>${sketch.title}</h3>
+              <p>${sketch.description}</p>
+
+              ${youtubeButton}
+
+              <div class="meta">
+                <span>⏱ ${sketch.duration || "Duration TBD"}</span>
+                ${(sketch.keywords || []).slice(0, 3).map(k => `<span>${k}</span>`).join("")}
+              </div>
+            </div>
+          `;		  
+          grid.appendChild(card);
+        });
+
+        catalogue.appendChild(section);
+      });
+
+      empty.style.display = visibleTotal ? "none" : "block";
+    }
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach(b => b.classList.toggle("active", b === button));
+        render();
+      });
+    });
+
+    search.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>
